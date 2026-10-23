@@ -1,0 +1,41 @@
+{
+  "brand": "Maison Atelier",
+  "tagline": "Full-service interior design for homes that deserve more than a showroom.",
+  "palette": {"light": "#F5F0E8", "mid": "#D9CBB4", "accent": "#5C4033", "dark": "#2B2B2B"},
+  "style_suffix": "warm minimalist luxury interior, cream, sand and walnut palette, soft late-afternoon light, Architectural Digest photography, wide angle, eye-level camera, photorealistic, 16:9, no people, no text",
+  "scenes": [
+    {"name": "Plan", "camera": "top-down", "reference": "none", "keyframe_prompt": "Architectural floor plan sketch on cream paper, pencil lines, top-down.",
+     "copy": {"kicker": "Maison Atelier · Interior design studio", "headline": "It starts with *a plan.*", "body": "Every project begins on paper: measured walls, the path of the light, how you move through a day."}},
+    {"name": "Shell", "camera": "top-down", "reference": "previous", "keyframe_prompt": "The same living room as an empty shell, bare plaster walls, concrete floor, tall windows.",
+     "copy": {"kicker": "The shell", "headline": "Every room, drawn for *how you live.*", "body": "We study the bones first: where the sun lands at four o'clock, which way the sofa should face."}},
+    {"name": "Eye level", "camera": "eye-level", "reference": "previous", "keyframe_prompt": "Same empty room, eye-level wide shot."},
+    {"name": "Finishes", "camera": "eye-level", "reference": "previous", "keyframe_prompt": "Same room, oak floors and limewash walls added, still unfurnished.",
+     "copy": {"kicker": "Living", "headline": "Spaces that feel *like you.*", "body": "Limewashed walls, white oak underfoot, and every piece chosen one at a time.", "cta": true}},
+    {"name": "Living", "nav_label": "Living", "camera": "eye-level", "reference": "previous", "is_anchor": true, "keyframe_prompt": "Same room fully styled: boucle curved sofa, travertine coffee table, sculptural lamp, linen curtains."},
+    {"name": "Doorway", "camera": "eye-level", "reference": "previous", "keyframe_prompt": "Doorway from the living room looking into the kitchen.",
+     "copy": {"kicker": "Kitchen", "headline": "A kitchen made *for gathering.*", "body": "Walnut cabinetry, a marble island and brass pendants that warm up at dusk."}},
+    {"name": "Kitchen", "nav_label": "Kitchen", "camera": "eye-level", "reference": "previous+anchor", "keyframe_prompt": "The kitchen: walnut cabinets, marble island, brass pendants."},
+    {"name": "Hallway", "camera": "eye-level", "reference": "previous+anchor", "keyframe_prompt": "Hallway leading to the primary bedroom.",
+     "copy": {"kicker": "Bedroom", "headline": "Rest, *by design.*", "body": "Linen bedding against a hand-troweled plaster wall. Nothing on the nightstand that doesn't need to be there."}},
+    {"name": "Bedroom", "nav_label": "Bedroom", "camera": "eye-level", "reference": "previous+anchor", "keyframe_prompt": "The primary bedroom, linen bedding, plaster headboard wall."},
+    {"name": "Bath", "nav_label": "Bath", "camera": "eye-level", "reference": "anchor", "exclude": "no bed, no bedroom", "keyframe_prompt": "Bathroom: travertine tub, arched mirror, zellige tile.",
+     "copy": {"kicker": "Bath", "headline": "The *quiet* room.", "body": "A travertine tub, an arched mirror, and handmade zellige that catches the last of the light."}},
+    {"name": "Exterior", "nav_label": "Exterior", "camera": "exterior", "reference": "previous+anchor", "keyframe_prompt": "Exterior view of the home at dusk, warm light glowing in the windows."}
+  ],
+  "clips": [
+    {"motion_prompt": "The drawing lifts and becomes a real 3D room, slow camera tilt."},
+    {"motion_prompt": "Camera smoothly lowers from overhead to eye level."},
+    {"motion_prompt": "Floors and walls finish themselves, camera slowly pushes in."},
+    {"motion_prompt": "Furniture and decor appear piece by piece, slow orbit right."},
+    {"motion_prompt": "Camera glides across the room toward the kitchen doorway."},
+    {"motion_prompt": "Camera moves through the doorway into the kitchen."},
+    {"motion_prompt": "Camera turns and drifts into the hallway."},
+    {"motion_prompt": "Camera moves down the hall into the bedroom."},
+    {"motion_prompt": "Camera pans through an arched doorway into the bathroom."},
+    {"motion_prompt": "Camera pulls back through the window, out to the dusk exterior."}
+  ],
+  "cta": {"headline": "Let's design *yours.*", "body": "Consultations last 60 minutes, at your home or by video. We'll reply within two business days.",
+          "project_types": ["Full home design", "Single room", "Kitchen or bath", "Virtual design"],
+          "budget_ranges": ["Under $25,000", "$25,000 – $75,000", "$75,000 – $150,000", "$150,000 +"]},
+  "footer": {"address": "48 Mercer Street, Studio 3, New York, NY", "email": "hello@maisonatelier.com"}
+}

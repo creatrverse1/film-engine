@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>__TITLE__</title>
+<meta name="description" content="__DESCRIPTION__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500&display=swap">
+<style>
+:root{
+  --light:__LIGHT__; --mid:__MID__; --accent:__ACCENT__; --dark:__DARK__;
+  --ink:color-mix(in srgb,var(--dark) 78%,#000);
+  --light-dim:color-mix(in srgb,var(--light) 78%,transparent);
+  --serif:"Cormorant Garamond","Cormorant",Garamond,"Times New Roman",serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --t-hero:clamp(3rem,7.2vw,7rem); --t-h2:clamp(2.4rem,5.2vw,5rem); --t-label:.72rem;
+  --ease:cubic-bezier(.22,.61,.24,1);
+  --gl:max(clamp(16px,5vw,64px),env(safe-area-inset-left,0px));
+  --gr:max(clamp(16px,5vw,64px),env(safe-area-inset-right,0px));
+  --seg:105vh; --hold:.4;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--ink)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--ink);color:var(--light);font-family:var(--sans);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::after{content:"";position:fixed;inset:-50%;z-index:70;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--mid);outline-offset:3px}
+h1,h2,h3{font-family:var(--serif);font-weight:300;line-height:1.02;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 em,h2 em{font-style:italic}
+p{margin:0}
+.label{font-size:var(--t-label);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--light-dim)}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;background:var(--dark)}
+.scrim{position:fixed;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.32) 34%,transparent 62%),
+  linear-gradient(90deg,rgba(0,0,0,.36) 0%,transparent 55%),
+  linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 16%)}
+.loadbar{position:fixed;left:0;right:0;top:0;height:2px;z-index:55;pointer-events:none}
+.loadbar i{display:block;height:100%;background:var(--mid);transform-origin:left;transform:scaleX(0);transition:transform .4s linear,opacity .8s var(--ease)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:calc(env(safe-area-inset-top,0px) + 18px) var(--gr) 18px var(--gl)}
+.wordmark{font-family:var(--serif);font-size:1.45rem;text-decoration:none;white-space:nowrap}
+.rooms{display:flex;gap:clamp(.9rem,2.2vw,2rem);list-style:none;margin:0;padding:0}
+.rooms a{font-size:.8rem;letter-spacing:.06em;text-decoration:none;opacity:.72;transition:opacity .6s var(--ease);position:relative;padding-block:4px}
+.rooms a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.rooms a:hover,.rooms a.is-on{opacity:1}.rooms a.is-on::after{transform:scaleX(1)}
+.book{font:500 .7rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border:1px solid color-mix(in srgb,var(--light) 60%,transparent);padding:.75rem 1rem;transition:background .6s var(--ease),color .6s var(--ease)}
+.book:hover{background:var(--light);color:var(--dark)}
+@media (max-width:760px){.nav{flex-wrap:wrap;row-gap:.6rem}.wordmark{font-size:1.2rem}.rooms{order:3;width:100%;overflow-x:auto;scrollbar-width:none;gap:1.2rem}.book{padding:.6rem .8rem}}
+.counter{position:fixed;z-index:50;right:var(--gr);bottom:calc(28px + env(safe-area-inset-bottom,0px));display:flex;align-items:baseline;gap:.7rem;font-variant-numeric:tabular-nums;pointer-events:none}
+.counter b{font-family:var(--serif);font-weight:300;font-size:2.4rem;line-height:1}
+.counter span{font-size:.8rem;color:var(--light-dim)}
+.counter .nm{font-size:var(--t-label);letter-spacing:.18em;text-transform:uppercase;margin-left:.4rem}
+@media (max-width:760px){.counter{top:calc(env(safe-area-inset-top,0px) + 98px);bottom:auto}.counter b{font-size:1.6rem}.counter .nm{display:none}}
+main{position:relative;z-index:2}
+.scene{position:relative;height:calc(var(--seg) * (1 + var(--hold)))}
+.scene.last{height:auto;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end}
+.still{display:none}
+.copy{position:fixed;left:var(--gl);right:var(--gr);bottom:calc(clamp(56px,12vh,130px) + env(safe-area-inset-bottom,0px));max-width:min(640px,calc(100% - 32px));display:flex;flex-direction:column;gap:1.3rem;opacity:0;visibility:hidden;will-change:opacity,transform}
+.copy.is-live{visibility:visible}
+.copy h1{font-size:var(--t-hero)}.copy h2{font-size:var(--t-h2)}
+.copy p{color:var(--light-dim);max-width:44ch}
+.cta{display:inline-flex;align-items:center;gap:.9rem;align-self:flex-start;font:500 .78rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;background:var(--light);color:var(--accent);padding:1.05rem 1.5rem;border:1px solid var(--light);transition:background .8s var(--ease),color .8s var(--ease);cursor:pointer}
+.cta::after{content:"";width:22px;height:1px;background:currentColor}
+.cta:hover{background:transparent;color:var(--light)}
+.copy.final{position:relative;left:auto;right:auto;bottom:auto;opacity:1;visibility:visible;max-width:none;width:100%;padding:clamp(120px,22vh,220px) var(--gr) calc(clamp(48px,8vh,96px) + env(safe-area-inset-bottom,0px)) var(--gl);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(32px,6vw,96px);align-items:end}
+.final .lead{display:flex;flex-direction:column;gap:1.3rem}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem 1.4rem;background:color-mix(in srgb,var(--ink) 62%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:clamp(22px,3vw,40px);border:1px solid color-mix(in srgb,var(--light) 14%,transparent)}
+.field{display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.field label{font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--light-dim)}
+.field input,.field select{font:inherit;color:var(--light);background:transparent;border:0;border-bottom:1px solid color-mix(in srgb,var(--light) 40%,transparent);border-radius:0;padding:.5rem 0 .65rem;width:100%;-webkit-appearance:none;appearance:none}
+.field select option{color:var(--dark);background:var(--light)}
+.field input::placeholder{color:color-mix(in srgb,var(--light) 45%,transparent)}
+.field input:focus,.field select:focus{outline:none;border-bottom-color:var(--light)}
+.field .err{font-size:.8rem;color:#F1D3BC}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form-foot{grid-column:1/-1;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.form-note{font-size:.85rem;color:var(--light-dim)}
+.done{grid-column:1/-1}.done h3{font-family:var(--serif);font-weight:300;font-size:2rem;margin-bottom:.6rem}
+.foot{grid-column:1/-1;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.8rem;font-size:.8rem;color:var(--light-dim);border-top:1px solid color-mix(in srgb,var(--light) 16%,transparent);padding-top:1.2rem;margin-top:1rem}
+@media (max-width:900px){.copy.final{grid-template-columns:1fr;align-items:start}}
+@media (max-width:520px){.form{grid-template-columns:1fr}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+[data-motion="static"] #stage,[data-motion="static"] .scrim,[data-motion="static"] .counter,[data-motion="static"] .loadbar{display:none}
+[data-motion="static"] main{padding-top:90px}
+[data-motion="static"] .scene{height:auto;display:grid;gap:1.4rem;padding:clamp(24px,5vw,64px) var(--gr) clamp(24px,5vw,64px) var(--gl)}
+[data-motion="static"] .still{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--dark)}
+[data-motion="static"] .copy{position:static;opacity:1;visibility:visible;max-width:720px}
+[data-motion="static"] .scene.last{display:block;padding:0}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
+</style>
+<script>(function(){document.documentElement.setAttribute('data-motion',matchMedia('(prefers-reduced-motion: reduce)').matches?'static':'film')})();</script>
+</head>
+<body>
+<script id="plan" type="application/json">__PLAN_JSON__</script>
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="scrim" aria-hidden="true"></div>
+<div class="loadbar" aria-hidden="true"><i></i></div>
+<header class="nav">
+  <a class="wordmark" href="#scene-1" id="wordmark"></a>
+  <nav aria-label="Sections"><ul class="rooms" id="rooms"></ul></nav>
+  <a class="book" id="book" href="#">Get in touch</a>
+</header>
+<div class="counter" aria-hidden="true"><b id="c-num">01</b><span id="c-total">/ 01</span><span class="nm" id="c-name"></span></div>
+<main id="main"></main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+'use strict';
+const PLAN = JSON.parse(document.getElementById('plan').textContent);
+const FORM_ENDPOINT = PLAN.form_endpoint || '';
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+// headline with *italic* words, built safely as DOM (plan text is never inserted as HTML)
+const headline = (tag, s) => { const h = el(tag); String(s || '').split(/(\*[^*]+\*)/).forEach(part => { if (/^\*[^*]+\*$/.test(part)) h.appendChild(el('em', null, part.slice(1, -1))); else if (part) h.appendChild(document.createTextNode(part)); }); return h; };
+const pad = n => String(n).padStart(2, '0');
+const MOTION = document.documentElement.dataset.motion;
+const MOBILE = Math.min(screen.width, innerWidth) < 820 || matchMedia('(pointer: coarse)').matches;
+const hasGSAP = !!(window.gsap && window.ScrollTrigger);
+const scenes = PLAN.scenes, N = scenes.length, LAST = N - 1;
+
+/* ---------- build the page from the plan ---------- */
+$('#wordmark').textContent = PLAN.brand;
+$('#c-total').textContent = '/ ' + pad(N);
+$('#book').href = '#scene-' + N;
+const main = $('#main');
+const ctaIdx = Math.max(0, scenes.findIndex(s => s.copy && s.copy.cta));
+let firstCopy = true;
+scenes.forEach((s, i) => {
+  const sec = el('section', 'scene' + (i === LAST ? ' last' : '')); sec.id = 'scene-' + (i + 1);
+  sec.setAttribute('aria-label', `Scene ${i + 1}, ${s.name}`);
+  const still = el('img', 'still'); still.dataset.still = i + 1; still.alt = s.name; still.loading = 'lazy'; sec.appendChild(still);
+  if (i !== LAST && s.copy && (s.copy.headline || s.copy.body)) {
+    // a copy block stays up until the next scene that has its own copy
+    let to = i; while (to + 1 < LAST && !(scenes[to + 1].copy && scenes[to + 1].copy.headline)) to++;
+    const c = el('div', 'copy'); c.dataset.from = i; c.dataset.to = Math.min(to, i + 1);
+    if (s.copy.kicker) c.appendChild(el('p', 'label', s.copy.kicker));
+    c.appendChild(headline(firstCopy ? 'h1' : 'h2', s.copy.headline)); firstCopy = false;
+    if (s.copy.body) c.appendChild(el('p', null, s.copy.body));
+    if (s.copy.cta) { const a = el('a', 'cta', 'Get in touch'); a.href = '#scene-' + N; c.appendChild(a); }
+    sec.appendChild(c);
+  }
+  if (i === LAST) sec.appendChild(buildFinal());
+  main.appendChild(sec);
+  if (s.nav_label) { const li = el('li'), a = el('a', null, s.nav_label); a.href = '#scene-' + (i + 1); a.dataset.k = i; li.appendChild(a); $('#rooms').appendChild(li); }
+});
+function buildFinal() {
+  const cta = PLAN.cta || {}, f = el('div', 'copy final'), lead = el('div', 'lead');
+  lead.appendChild(el('p', 'label', pad(N) + ' · ' + (scenes[LAST].name || '')));
+  lead.appendChild(headline('h2', cta.headline || "Let's *talk.*"));
+  if (cta.body) lead.appendChild(el('p', null, cta.body));
+  f.appendChild(lead);
+  const form = el('form', 'form'); form.id = 'lead-form'; form.noValidate = true;
+  const field = (id, label, input) => { const d = el('div', 'field'), l = el('label', null, label); l.htmlFor = id; input.id = id; d.append(l, input, Object.assign(el('span', 'err'), { id: id + '-err' })); return d; };
+  const inp = (name, type, ph, ac) => Object.assign(el('input'), { name, type, placeholder: ph, autocomplete: ac || 'off' });
+  const sel = (name, first, opts) => { const s = el('select'); s.name = name; s.appendChild(Object.assign(el('option', null, first), { value: '' })); (opts || []).forEach(o => s.appendChild(el('option', null, o))); return s; };
+  form.append(field('f-name', 'Name', inp('name', 'text', 'Your full name', 'name')), field('f-email', 'Email', inp('email', 'email', 'you@example.com', 'email')),
+    field('f-type', 'Project type', sel('project_type', 'Choose one', cta.project_types)));
+  if ((cta.budget_ranges || []).length) form.append(field('f-budget', 'Budget', sel('budget', 'Choose a range', cta.budget_ranges)));
+  const hp = el('div', 'hp'); hp.setAttribute('aria-hidden', 'true'); hp.appendChild(Object.assign(inp('company', 'text', ''), { tabIndex: -1 })); form.appendChild(hp);
+  const foot = el('div', 'form-foot'), btn = el('button', 'cta', 'Send request'); btn.type = 'submit';
+  const note = el('p', 'form-note', 'We never share your details.'); note.id = 'form-status'; note.setAttribute('role', 'status');
+  foot.append(btn, note); form.appendChild(foot); f.appendChild(form);
+  const ft = PLAN.footer || {}; const fo = el('div', 'foot'); fo.append(el('span', null, [PLAN.brand, ft.address].filter(Boolean).join(' · ')), el('span', null, ft.email || '')); f.appendChild(fo);
+  return f;
+}
+document.title = PLAN.brand;
+
+/* ---------- stills for reduced motion ---------- */
+const stillSrc = n => `stills/k${pad(n)}.webp`;
+const useStills = () => $$('.still').forEach(img => img.src = stillSrc(img.dataset.still));
+if (MOTION === 'static') useStills();
+
+/* ---------- scroll -> scene position ---------- */
+const sections = $$('.scene'), HOLD = .4;
+let tops = [], heights = [];
+const measure = () => { tops = sections.map(s => s.offsetTop); heights = sections.map(s => s.offsetHeight); };
+function uFromY(y) {
+  if (y >= tops[LAST]) return LAST;
+  for (let k = LAST - 1; k >= 0; k--) if (y >= tops[k]) return k + clamp(clamp((y - tops[k]) / heights[k]) * (1 + HOLD) - HOLD);
+  return 0;
+}
+
+/* ---------- frames ---------- */
+const canvas = $('#stage'), ctx = canvas.getContext('2d', { alpha: false });
+let man = null, blobs = [], bitmaps = new Map(), lastDrawn = -1, want = 0, decoding = new Set();
+const LRU = MOBILE ? 24 : 48;
+function sizeCanvas() { const d = Math.min(devicePixelRatio || 1, MOBILE ? 2 : 1.5); canvas.width = Math.round(innerWidth * d); canvas.height = Math.round(innerHeight * d); lastDrawn = -1; draw(); }
+function frameAt(u) { if (!man) return 0; const k = man.keys, i = Math.min(k.length - 2, Math.floor(u)), t = u - i; return Math.round(k[i] + t * (k[i + 1] - k[i])) - 1; }
+function decode(i) {
+  if (i < 0 || bitmaps.has(i) || decoding.has(i) || !blobs[i]) return;
+  decoding.add(i);
+  createImageBitmap(blobs[i]).then(bm => { decoding.delete(i); bitmaps.set(i, bm);
+    if (bitmaps.size > LRU) for (const [j, b] of bitmaps) { if (Math.abs(j - want) > 12) { b.close && b.close(); bitmaps.delete(j); if (bitmaps.size <= LRU) break; } }
+    if (Math.abs(i - want) < 3) draw(); }).catch(() => decoding.delete(i));
+}
+function nearest(i) { for (let d = 0; d < 600; d++) { if (bitmaps.has(i - d)) return i - d; if (bitmaps.has(i + d)) return i + d; } return -1; }
+function draw() {
+  if (!man) return; [0, 1, 2, -1].forEach(o => decode(want + o));
+  const j = bitmaps.has(want) ? want : nearest(want); if (j < 0 || j === lastDrawn) return;
+  const bm = bitmaps.get(j), s = Math.max(canvas.width / bm.width, canvas.height / bm.height), w = bm.width * s, h = bm.height * s;
+  ctx.drawImage(bm, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h); lastDrawn = j;
+}
+async function loadFrames() {
+  const r = await fetch('frames/manifest.json'); if (!r.ok) throw new Error('manifest ' + r.status);
+  man = await r.json(); blobs = new Array(man.count);
+  const bar = $('.loadbar i'); let got = 0; const tick = () => { bar.style.transform = `scaleX(${got / man.count})`; if (got >= man.count) bar.style.opacity = 0; };
+  const dir = MOBILE ? 'frames/sm/' : 'frames/', name = i => `${dir}f_${String(i + 1).padStart(4, '0')}.webp`;
+  const first = [], rest = [], seen = new Set();
+  for (let i = 0; i < man.keys[1]; i++) { first.push(i); seen.add(i); }
+  for (const step of [8, 4, 2, 1]) for (let i = 0; i < man.count; i += step) if (!seen.has(i)) { seen.add(i); rest.push(i); }
+  const q = [...first, ...rest];
+  const worker = async () => { while (q.length) { const i = q.shift(); try { blobs[i] = await (await fetch(name(i))).blob(); got++; if (got % 10 === 0) tick(); if (Math.abs(i - want) < 6) draw(); } catch (e) {} } tick(); };
+  await Promise.all(Array.from({ length: 6 }, worker));
+}
+
+/* ---------- overlays ---------- */
+const copies = $$('.copy:not(.final)').map(e => ({ e, a: +e.dataset.from, b: +e.dataset.to }));
+const navLinks = $$('.rooms a');
+function overlays(u) {
+  for (const c of copies) {
+    const o = u < c.a ? clamp((u - (c.a - .45)) / .3) : u <= c.b + .2 ? 1 : 1 - clamp((u - (c.b + .2)) / .25);
+    c.e.style.opacity = o; c.e.style.transform = `translateY(${(1 - o) * (u < c.a ? 24 : -24)}px)`; c.e.classList.toggle('is-live', o > .01);
+  }
+  const k = Math.round(u); $('#c-num').textContent = pad(k + 1); $('#c-name').textContent = scenes[k].name;
+  let on = null; for (const a of navLinks) if (u >= +a.dataset.k - .5) on = a;
+  navLinks.forEach(a => a.classList.toggle('is-on', a === on));
+}
+
+/* ---------- scroll wiring ---------- */
+let lenis = null;
+const update = y => { const u = uFromY(y); want = frameAt(u); overlays(u); draw(); };
+if (MOTION === 'film') {
+  measure(); sizeCanvas();
+  addEventListener('resize', () => { measure(); sizeCanvas(); hasGSAP && ScrollTrigger.refresh(); });
+  if (window.Lenis) lenis = new Lenis({ duration: 1.3, easing: t => 1 - Math.pow(1 - t, 4), smoothWheel: true });
+  if (hasGSAP) {
+    gsap.registerPlugin(ScrollTrigger);
+    if (lenis) { lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
+    const p = { y: 0 };
+    gsap.to(p, { y: () => ScrollTrigger.maxScroll(window), ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: .5, invalidateOnRefresh: true }, onUpdate: () => update(p.y) });
+  } else {
+    if (lenis) { const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
+    let cur = scrollY; const loop = () => { cur += (scrollY - cur) * .14; update(cur); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  }
+  update(scrollY);
+  loadFrames().catch(() => { document.documentElement.dataset.motion = 'static'; useStills(); });
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#scene-"]'); if (!a) return; const t = $(a.getAttribute('href')); if (!t) return;
+  e.preventDefault(); lenis ? lenis.scrollTo(t, { duration: 2.2 }) : t.scrollIntoView({ behavior: MOTION === 'static' ? 'auto' : 'smooth' });
+});
+
+/* ---------- lead form ---------- */
+const form = $('#lead-form');
+const err = (id, msg) => { const i = $('#' + id); if (!i) return; $('#' + id + '-err').textContent = msg || ''; i.setAttribute('aria-invalid', msg ? 'true' : 'false'); };
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(form)); let ok = true;
+  if (!(d.name || '').trim()) { err('f-name', 'Please add your name.'); ok = false; } else err('f-name');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((d.email || '').trim())) { err('f-email', 'Enter an email like name@domain.com.'); ok = false; } else err('f-email');
+  if (!d.project_type) { err('f-type', 'Choose a project type.'); ok = false; } else err('f-type');
+  if (!ok || d.company) return;
+  const btn = form.querySelector('button'); btn.disabled = true; btn.textContent = 'Sending';
+  try {
+    if (FORM_ENDPOINT) { const r = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ site: PLAN.brand, name: d.name, email: d.email, project_type: d.project_type, budget: d.budget || '', submitted_at: new Date().toISOString() }) }); if (!r.ok) throw new Error(r.status); }
+    else await new Promise(r => setTimeout(r, 600));
+    form.replaceChildren(Object.assign(el('div', 'done'), { tabIndex: -1 }));
+    const done = form.firstChild; done.append(el('h3', null, `Thank you, ${d.name.trim().split(/\s+/)[0]}.`), el('p', null, "Your request is in. We'll reply within two business days."));
+    done.focus({ preventScroll: true });
+  } catch (x) { btn.disabled = false; btn.textContent = 'Send request'; $('#form-status').textContent = "We couldn't send your request. Please try again."; }
+});
+})();
+</script>
+</body>
+</html>
